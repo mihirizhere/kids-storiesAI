@@ -2,6 +2,10 @@
 
 A simple Python application that uses OpenAI’s API to generate and judge bedtime stories for children aged 5–10. It classifies a user prompt into one of four themes, selects an appropriate story arc, generates a story, checks quality, and applies user feedback.
 
+## Block Diagram
+![Block Diagram](block-diagram.png)
+
+
 ## Features
 
 - **TF-IDF + Naive Bayes classifier** for prompt categorization
