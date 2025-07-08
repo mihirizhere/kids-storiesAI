@@ -99,5 +99,4 @@ labels = (
     ['lullaby_rhyme'] * 20
 )
 
-
 train_and_save_classifier(texts, labels)

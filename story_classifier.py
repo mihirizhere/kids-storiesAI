@@ -49,7 +49,6 @@ def classify_topic_ml(user_prompt: str) -> str:
     Returns:
         str: The predicted theme key.
     """
-    # Lazy-load on call to avoid import-time errors
     vectorizer, clf = load_classifier()
     X = vectorizer.transform([user_prompt])
     return clf.predict(X)[0]

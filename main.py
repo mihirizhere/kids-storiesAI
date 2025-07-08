@@ -1,6 +1,4 @@
 """
-original.py
-
 This script implements a bedtime-story agent using OpenAI’s API. It:
  - Loads your API key from a .env file
  - Classifies the user’s prompt into a story category
@@ -8,10 +6,6 @@ This script implements a bedtime-story agent using OpenAI’s API. It:
  - Generates a story via OpenAI
  - Judges the story for age-appropriateness and coherence
  - Allows the user to provide feedback and revises the story accordingly
-
-To run successfully, you must install required packages locally:
-    pip install openai python-dotenv
-
 """
 
 from dotenv import load_dotenv
@@ -38,27 +32,15 @@ THEMES = {
     'number_journey':    'Number Journey',
     'lullaby_rhyme':     'Lullaby Rhyme'
 }
-
-
-# --- Category Classifier ---
 def classify_topic(user_prompt: str) -> str:
     """
     ML-based classifier returning one of:
     'fantasy_adventure', 'moral_quest',
     'number_journey', or 'lullaby_rhyme'
     """
-    # text = user_prompt.lower()
-    # if any(word in text for word in ['count', 'numbers', 'one', 'two']):
-    #     return 'counting'
-    # if 'rhyme' in text or 'poem' in text:
-    #     return 'bedtime_rhyme'
-    # if 'lesson' in text or 'morals' in text:
-    #     return 'moral_story'
-    # return 'fairy_tale'
     return classify_topic_ml(user_prompt)
 
 
-# --- Story Arc Selector ---
 def select_arc(category: str) -> str:
     arcs = {
         'fantasy_adventure': 'ThreeAct',
@@ -67,11 +49,8 @@ def select_arc(category: str) -> str:
         'lullaby_rhyme':     'RhymeScheme',
     }
     return arcs.get(category, 'ThreeAct')
-    # category = classify_topic(topic)
-    # arc = select_arc(category)
 
 
-# --- Core LLM calls ---
 def generate_story(topic: str, arc: str, category: str) -> str:
     prompt = (
         f"You are a storyteller for children aged 5-10. "
@@ -89,7 +68,7 @@ def generate_story(topic: str, arc: str, category: str) -> str:
     return resp.choices[0].message["content"].strip()
 
 
-# --- LLM Judge ---
+
 def judge_story(topic, story_text: str) -> bool:
     judge_prompt = (
         "Please evaluate this story for: "
@@ -110,7 +89,6 @@ def judge_story(topic, story_text: str) -> bool:
     return verdict.startswith("PASS")
 
 
-# --- Feedback Handler ---
 def apply_feedback(story: str, feedback: str) -> str:
     prompt = (
         "Original story:\n" + story + "\n\n" 
@@ -126,14 +104,7 @@ def apply_feedback(story: str, feedback: str) -> str:
     return resp.choices[0].message["content"].strip()
 
 
-
-
 def main():
-    # Optionally run tests if env var set
-    # if os.getenv("RUN_TESTS") == "1":
-    #     _run_tests()
-    #     return
-
     load_api_key()
     topic = input("What kind of story do you want to hear? ")
     category = classify_topic(topic)
