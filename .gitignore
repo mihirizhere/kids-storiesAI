@@ -1,0 +1,12 @@
+.env
+.venv/
+env/
+.idea/
+*.iml
+
+# caches
+__pycache__/
+*.pyc
+
+# If you’d rather retrain on each machine, uncomment:
+# classifier.joblib

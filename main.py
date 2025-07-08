@@ -22,6 +22,7 @@ try:
     import openai
 except ModuleNotFoundError:
     sys.exit("Error: openai package not found. Please install it with `pip install openai` in your local environment.")
+from story_classifier import classify_topic_ml
 
 def load_api_key():
     """Load the OpenAI API key from .env and configure the client."""
@@ -42,29 +43,32 @@ THEMES = {
 # --- Category Classifier ---
 def classify_topic(user_prompt: str) -> str:
     """
-    Stub for classification. Returns one of four categories:
-        'fairy_tale', 'moral_story', 'counting', 'bedtime_rhyme'
+    ML-based classifier returning one of:
+    'fantasy_adventure', 'moral_quest',
+    'number_journey', or 'lullaby_rhyme'
     """
-    # Simple keyword-based example
-    text = user_prompt.lower()
-    if any(word in text for word in ['count', 'numbers', 'one', 'two']):
-        return 'counting'
-    if 'rhyme' in text or 'poem' in text:
-        return 'bedtime_rhyme'
-    if 'lesson' in text or 'morals' in text:
-        return 'moral_story'
-    return 'fairy_tale'
+    # text = user_prompt.lower()
+    # if any(word in text for word in ['count', 'numbers', 'one', 'two']):
+    #     return 'counting'
+    # if 'rhyme' in text or 'poem' in text:
+    #     return 'bedtime_rhyme'
+    # if 'lesson' in text or 'morals' in text:
+    #     return 'moral_story'
+    # return 'fairy_tale'
+    return classify_topic_ml(user_prompt)
 
 
 # --- Story Arc Selector ---
 def select_arc(category: str) -> str:
     arcs = {
-        'fairy_tale': "ThreeAct",
-        'moral_story': "ProblemResolution",
-        'counting': "Cumulative",
-        'bedtime_rhyme': "RhymeScheme"
+        'fantasy_adventure': 'ThreeAct',
+        'moral_quest':       'ProblemResolution',
+        'number_journey':    'Cumulative',
+        'lullaby_rhyme':     'RhymeScheme',
     }
     return arcs.get(category, 'ThreeAct')
+    # category = classify_topic(topic)
+    # arc = select_arc(category)
 
 
 # --- Core LLM calls ---
@@ -73,7 +77,7 @@ def generate_story(topic: str, arc: str, category: str) -> str:
         f"You are a storyteller for children aged 5-10. "
         f"Please write a story of **about 225 words** and no more than 250 words total."
         f"Use simple vocabulary, gentle themes, and a '{arc}' story structure. "
-        f"Category: {category}. Topic: {topic}."
+        f"Category: {THEMES.get(category, category)}. Topic: {topic}."
     )
     resp = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
